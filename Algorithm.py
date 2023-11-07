@@ -1,8 +1,31 @@
-def dfs_80(graph, snake, apple):
-    E = {}
+from collections import deque
+
+
+def BFS(G, snake, apple):
+    snake_head = snake[0]
+
+    if snake_head == apple:
+        return
+
+    Q = deque([[snake_head]])
+    dist = {snake_head: 0}
+    E = set()
     for node in snake:
         E.add(node)
 
+    while Q:
+        path = Q.popleft()
+        v = path[-1]
+        for num in G[v]:
+            if num not in E:
+                Q.append(path + [num])
+                E.add(num)
+                dist[num] = dist[v] + 1
+                if num == apple:
+                    if len(path) == 1:
+                        return apple
+                    else:
+                        return path[1] #path + [num]
 
 def create_adjacent_grid(x, y):
     grid = {}
@@ -24,8 +47,7 @@ def create_adjacent_grid(x, y):
 x = 10  # Width of the grid
 y = 10  # Height of the grid
 grid = create_adjacent_grid(x, y)
-for node, neighbors in grid.items():
-    print(f"Node {node} is connected to: {neighbors}")
 
 
-
+#print(grid)
+(BFS(grid, [(1, 2), (1, 3), (1, 4)], (5, 2)))
