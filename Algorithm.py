@@ -14,8 +14,13 @@ def BFS(G, snake, apple):
         E.add(node)
 
     while Q:
+        temp_E = E
         path = Q.popleft()
         v = path[-1]
+        print(path)
+        if len(path) <= len(snake):
+            if snake[-len(path)] in E:
+                E.remove(snake[-len(path)])
         for num in G[v]:
             if num not in E:
                 Q.append(path + [num])

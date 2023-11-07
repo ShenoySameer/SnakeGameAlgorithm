@@ -29,7 +29,7 @@ def main():
     all_points = list(grid.keys())
     apple = random.choice(list(set(all_points)-set(snake)))
     last_apple = None
-    delay = 100
+    delay = 10
 
     while True:
         drawGrid()
