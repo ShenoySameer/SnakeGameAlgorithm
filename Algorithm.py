@@ -1,5 +1,25 @@
 from collections import deque
 
+def BFS_basic(G, snake):
+    snake_head = snake[0]
+
+    Q = deque([[snake_head]])
+    dist = {snake_head: 0}
+    E = set()
+    snake_set = set(snake)
+
+    while Q:
+        path = Q.popleft()
+        v = path[-1]
+        if len(path) <= len(snake):
+            if snake[-len(path)] in E:
+                E.remove(snake[-len(path)])
+        for num in G[v]:
+            if num not in E.union(snake_set):
+                Q.append(path + [num])
+                E.add(num)
+                dist[num] = dist[v] + 1
+    return E
 
 def BFS(G, snake, apple):
     snake_head = snake[0]
@@ -7,6 +27,7 @@ def BFS(G, snake, apple):
     if snake_head == apple:
         return
 
+    resort = []
     Q = deque([[snake_head]])
     dist = {snake_head: 0}
     E = set()
@@ -14,10 +35,8 @@ def BFS(G, snake, apple):
         E.add(node)
 
     while Q:
-        temp_E = E
         path = Q.popleft()
         v = path[-1]
-        print(path)
         if len(path) <= len(snake):
             if snake[-len(path)] in E:
                 E.remove(snake[-len(path)])
@@ -30,7 +49,16 @@ def BFS(G, snake, apple):
                     if len(path) == 1:
                         return apple
                     else:
-                        return path[1] #path + [num]
+                        score = len(BFS_basic(G, (path[1:] + [num]))) / (len(G))
+                        print(score)
+                        if score > 0.8:
+                            return (path[1:] + [num])[::-1]
+                        else:
+                            resort.append((score, (path[1:] + [num])[::-1]))
+
+    resort.sort(reverse=True)
+    print(resort)
+    return resort[0]
 
 def create_adjacent_grid(x, y):
     grid = {}

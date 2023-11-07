@@ -29,15 +29,19 @@ def main():
     all_points = list(grid.keys())
     apple = random.choice(list(set(all_points)-set(snake)))
     last_apple = None
-    delay = 10
+    delay = 50
+
+    current_path = BFS(grid, snake, apple)
 
     while True:
         drawGrid()
-        next_space = BFS(grid, snake, apple)
+        next_space = current_path.pop()
+
         if next_space == apple:
             last_apple = apple
             snake.appendleft(apple)
             apple = random.choice(list(set(all_points)-set(snake)))
+            current_path = BFS(grid, snake, apple)
 
         else:
             snake.appendleft(next_space)
