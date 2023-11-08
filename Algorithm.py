@@ -20,6 +20,7 @@ def BFS_basic(G, snake):
                 depth[node] = depth[v] + 1
                 if node not in snake_set:
                     Q.append(node)
+    print(len(E)/len(G))
     return E
 
 def BFS(G, snake, apple):
@@ -39,15 +40,14 @@ def BFS(G, snake, apple):
         if len(path) <= len(snake):
             if snake[-len(path)] in E:
                 E.remove(snake[-len(path)])
-        
+
         for node in G[v]:
             if node not in E:
                 Q.append(path + [node])
                 E.add(node)
                 if node == apple:
-                    score = len(BFS_basic(G, (path[1:] + [node]))) / (len(G))
-                    print(score)
-                    if score > 0.8:
+                    score = len(BFS_basic(G, (path[1:] + [node])[::-1])) / (len(G))
+                    if score > 0.9:
                         return (path[1:] + [node])[::-1]
                     else:
                         resort.append((score, (path[1:] + [node])[::-1]))
@@ -65,8 +65,9 @@ def DFS_long_path(G, snake, apple):
     depth = {snake_head: 0}
     E = set(snake)
     longest_path = []
-    
+
     accessible_nodes = BFS_basic(G, snake)
+    target = snake_head
     for i in range(len(snake)):
         body = snake[len(snake) - (i+1)]
         if body in accessible_nodes:
@@ -91,11 +92,9 @@ def DFS_long_path(G, snake, apple):
                 if travel_distance(node, target) == dist_from_tail - depth[node]:
                     new_snake = new_path[:0:-1] + [snake[i] for i in range(len(snake)-depth[node])]
                     return BFS(G, new_snake, apple) + new_path[:0:-1]
-                print(new_path)
                 longest_path = max(longest_path, new_path, key=len)
-            else:
-                print(node)
-    
+
+
     return longest_path[:0:-1]
 
 
@@ -129,7 +128,7 @@ grid = create_adjacent_grid(x, y)
 
 #print(grid)
 # print(BFS(grid, [(1, 2), (1, 3), (1, 4)], (5, 2)))
-snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5), 
+snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5),
                    (4, 4), (4, 3), (4, 2), (4, 1), (4, 0), (3, 0), (2, 0), (1, 0),
                      (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 9), (1, 9)])
 print(BFS_basic(grid, snake))
@@ -137,4 +136,3 @@ print(BFS(grid, snake, (9, 9)))
 print(DFS_long_path(grid, snake, (9, 9)))
 
 # [(1, 4), (1, 3), (1, 2), (1, 1), (2, 1), (3, 1), (3, 2)]
-

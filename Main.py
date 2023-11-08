@@ -14,13 +14,11 @@ GREEN = "green"
 RED = "red"
 WINDOW_HEIGHT = y*block_size
 WINDOW_WIDTH = x*block_size
-# snake = deque([(1, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1)])
-snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5), 
-                   (4, 4), (4, 3), (4, 2), (4, 1), (4, 0), (3, 0), (2, 0), (1, 0),
-                     (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)])
-# snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5), 
-#                    (4, 4), (4, 3), (4, 2), (4, 1), (4, 0), (3, 0), (2, 0), (1, 0),
-#                      (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 9), (1, 9)])
+snake = deque([(1, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1)])
+#snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5),
+#                  (4, 4), (4, 3), (4, 2), (4, 1), (4, 0), (3, 0), (2, 0), (1, 0),
+#                     (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)])
+#snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5), (4, 4), (4, 3), (4, 2), (4, 1), (4, 0), (3, 0), (2, 0), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 9), (1, 9)])
 
 
 def main():
@@ -36,7 +34,7 @@ def main():
     all_points = list(grid.keys())
     apple = random.choice(list(set(all_points)-set(snake)))
     last_apple = None
-    delay = 10
+    delay = 0
 
     current_path = BFS(grid, snake, apple)
     if not current_path:
@@ -57,7 +55,7 @@ def main():
             apple = random.choice(list(set(all_points)-set(snake)))
             current_path = BFS(grid, snake, apple)
             if not current_path:
-                current_path = DFS_and_BFS(grid, snake, apple)
+                current_path = DFS_long_path(grid, snake, apple)
                 print(current_path)
                 print(apple)
                 print(last_apple)
@@ -76,7 +74,7 @@ def main():
 
         pygame.display.update()
         pygame.time.wait(delay)
-    
+
     # Game over
     while True:
         for event in pygame.event.get():
@@ -101,7 +99,7 @@ def drawGrid():
 
     for x in range(0, WINDOW_WIDTH, block_size):
         for y in range(0, WINDOW_HEIGHT, block_size):
-            
+
             rect = pygame.Rect(x, y, block_size, block_size)
             pygame.draw.rect(SCREEN, BLACK, rect) #change to WHITE for grid
 
@@ -138,4 +136,3 @@ def drawBorder(x, y, location='top', color='blue'):
     pygame.draw.rect(SCREEN, color, border_rect)
 
 main()
-
