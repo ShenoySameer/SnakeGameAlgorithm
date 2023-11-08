@@ -46,7 +46,7 @@ def BFS(G, snake, apple):
                 Q.append(path + [node])
                 E.add(node)
                 if node == apple:
-                    score = len(BFS_basic(G, (path[1:] + [node])[::-1])) / (len(G))
+                    score = len(BFS_basic(G, (path[1:] + [node])[::1])) / (len(G))
                     if score > 0.9:
                         return (path[1:] + [node])[::-1]
                     else:
@@ -89,9 +89,11 @@ def DFS_long_path(G, snake, apple):
                 depth[node] = depth[v] + 1
                 # Find out if at any point the snake could reach the target point
                 # as the tail leaves that point
-                if travel_distance(node, target) == dist_from_tail - depth[node]:
-                    new_snake = new_path[:0:-1] + [snake[i] for i in range(len(snake)-depth[node])]
-                    return BFS(G, new_snake, apple) + new_path[:0:-1]
+                # if travel_distance(node, target) == dist_from_tail - depth[node]:
+                new_snake = new_path[:0:-1] + [snake[i] for i in range(len(snake)-depth[node])]
+                escape_path = BFS(G, new_snake, apple) + new_path[:0:-1]
+                if escape_path:
+                    return escape_path
                 longest_path = max(longest_path, new_path, key=len)
 
 

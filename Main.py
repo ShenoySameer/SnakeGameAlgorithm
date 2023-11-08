@@ -56,9 +56,7 @@ def main():
             current_path = BFS(grid, snake, apple)
             if not current_path:
                 current_path = DFS_long_path(grid, snake, apple)
-                print(current_path)
-                print(apple)
-                print(last_apple)
+
 
         else:
             snake.appendleft(next_space)
