@@ -7,20 +7,21 @@ import sys
 x = 40
 y = 20
 block_size = 30
-border_size = 3
+border_size = 30
 BLACK = (0, 0, 0)
 WHITE = (200, 200, 200)
 GREEN = "green"
 RED = "red"
 WINDOW_HEIGHT = y*block_size
 WINDOW_WIDTH = x*block_size
-# snake = deque([(1, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1)])
-snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5), 
-                   (4, 4), (4, 3), (4, 2), (4, 1), (4, 0), (3, 0), (2, 0), (1, 0),
-                     (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)])
-# snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5), 
+snake = deque([(1, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1), (2, 1)])
+snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5),
+                 (4, 4), (4, 3), (4, 2), (4, 1), (4, 0), (3, 0), (2, 0), (1, 0),
+                    (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)])
+# snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5),
 #                    (4, 4), (4, 3), (4, 2), (4, 1), (4, 0), (3, 0), (2, 0), (1, 0),
 #                      (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 9), (1, 9)])
+snake = deque([(4, 13), (4, 12), (4, 11), (4, 10), (4, 9), (3, 9), (2, 9), (2, 10), (2, 11), (2, 12), (2, 13), (2, 14), (2, 15), (2, 16), (2, 17), (2, 18), (1, 18), (1, 17), (1, 16), (1, 15), (1, 14), (1, 13), (1, 12), (1, 11), (1, 10), (1, 9), (1, 8), (1, 7), (1, 6), (1, 5), (1, 4), (1, 3), (1, 2), (1, 1), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 9), (0, 10), (0, 11), (0, 12), (0, 13), (0, 14), (0, 15), (0, 16), (0, 17), (0, 18), (0, 19), (1, 19), (2, 19), (3, 19), (4, 19), (5, 19), (6, 19), (7, 19), (8, 19), (9, 19), (10, 19), (11, 19), (12, 19), (13, 19), (14, 19), (15, 19), (16, 19), (17, 19), (18, 19), (19, 19), (20, 19), (21, 19), (22, 19), (23, 19), (24, 19), (25, 19), (26, 19), (27, 19), (28, 19), (29, 19), (30, 19)])
 
 
 def main():
@@ -34,6 +35,7 @@ def main():
     SCREEN.fill(BLACK)
     grid = create_adjacent_grid(x, y)
     all_points = list(grid.keys())
+    font = pygame.font.Font(None, 75)
     apple = random.choice(list(set(all_points)-set(snake)))
     last_apple = None
     delay = 10
@@ -45,10 +47,15 @@ def main():
     while True:
         drawGrid()
         drawBorder(*snake[0], 'top')
-        drawBorder(*snake[0], 'bottom')
-        drawBorder(*snake[0], 'left')
-        drawBorder(*snake[0], 'right')
+        # drawBorder(*snake[0], 'bottom')
+        # drawBorder(*snake[0], 'left')
+        # drawBorder(*snake[0], 'right')
         if not current_path:
+            print()
+            text = font.render(str(len(snake)), True, "blue")
+            text_rect = text.get_rect()
+            text_rect.center = (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)
+            SCREEN.blit(text, text_rect)
             pygame.display.update()
             break
         next_space = current_path.pop()
@@ -61,9 +68,7 @@ def main():
             current_path = BFS(grid, snake, apple)
             if not current_path:
                 current_path = DFS_long_path(grid, snake, apple)
-                print(current_path)
-                print(apple)
-                print(last_apple)
+                # print(current_path)
 
         else:
             snake.appendleft(next_space)
@@ -79,7 +84,7 @@ def main():
 
         pygame.display.update()
         pygame.time.wait(delay)
-    
+
     # Game over
     while True:
         for event in pygame.event.get():
@@ -104,7 +109,7 @@ def drawGrid():
 
     for x in range(0, WINDOW_WIDTH, block_size):
         for y in range(0, WINDOW_HEIGHT, block_size):
-            
+
             rect = pygame.Rect(x, y, block_size, block_size)
             pygame.draw.rect(SCREEN, BLACK, rect) #change to WHITE for grid
 
@@ -141,4 +146,3 @@ def drawBorder(x, y, location='top', color='blue'):
     pygame.draw.rect(SCREEN, color, border_rect)
 
 main()
-
