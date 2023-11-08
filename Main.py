@@ -7,7 +7,7 @@ import sys
 x = 40
 y = 20
 block_size = 30
-border_size = 30
+border_size = 3
 BLACK = (0, 0, 0)
 WHITE = (200, 200, 200)
 GREEN = "green"
@@ -44,7 +44,10 @@ def main():
 
     while True:
         drawGrid()
-        drawBorder(*snake[0])
+        drawBorder(*snake[0], 'top')
+        drawBorder(*snake[0], 'bottom')
+        drawBorder(*snake[0], 'left')
+        drawBorder(*snake[0], 'right')
         if not current_path:
             pygame.display.update()
             break
@@ -57,7 +60,7 @@ def main():
             apple = random.choice(list(set(all_points)-set(snake)))
             current_path = BFS(grid, snake, apple)
             if not current_path:
-                current_path = DFS_and_BFS(grid, snake, apple)
+                current_path = DFS_long_path(grid, snake, apple)
                 print(current_path)
                 print(apple)
                 print(last_apple)
@@ -131,7 +134,7 @@ def drawBorder(x, y, location='top', color='blue'):
     elif location == 'right':
         length = border_size
         height = block_size
-        a = block_size - height
+        a = block_size - length
         b = 0
 
     border_rect = pygame.Rect(x*block_size+a, y*block_size+b, length, height)

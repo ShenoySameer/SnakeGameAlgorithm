@@ -41,16 +41,17 @@ def BFS(G, snake, apple):
                 E.remove(snake[-len(path)])
         
         for node in G[v]:
+            new_path = path + [node]
             if node not in E:
-                Q.append(path + [node])
+                Q.append(new_path)
                 E.add(node)
                 if node == apple:
-                    score = len(BFS_basic(G, (path[1:] + [node]))) / (len(G))
+                    score = len(BFS_basic(G, new_path[::-1])) / (len(G))
                     print(score)
                     if score > 0.8:
-                        return (path[1:] + [node])[::-1]
+                        return new_path[:0:-1]
                     else:
-                        resort.append((score, (path[1:] + [node])[::-1]))
+                        resort.append((score, new_path[:0:-1]))
 
     # resort.sort(reverse=True)
     # print(resort)
@@ -91,10 +92,10 @@ def DFS_long_path(G, snake, apple):
                 if travel_distance(node, target) == dist_from_tail - depth[node]:
                     new_snake = new_path[:0:-1] + [snake[i] for i in range(len(snake)-depth[node])]
                     return BFS(G, new_snake, apple) + new_path[:0:-1]
-                print(new_path)
+                # print(new_path)
                 longest_path = max(longest_path, new_path, key=len)
-            else:
-                print(node)
+            # else:
+                # print(node)
     
     return longest_path[:0:-1]
 
