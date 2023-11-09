@@ -26,7 +26,7 @@ def BFS(G, snake, apple):
     snake_head = snake[0]
 
     if snake_head == apple:
-        return
+        return []
 
     resort = []
     Q = deque([[snake_head]])
@@ -47,17 +47,20 @@ def BFS(G, snake, apple):
                 E.add(node)
                 if node == apple:
                     new_snake = new_path[::-1] + [snake[i] for i in range(1, len(snake)-len(new_path))]
-                    score = len(BFS_basic(G, new_snake)) / (len(G))
-                    print(score)
+                    accessible_nodes = BFS_basic(G, new_snake)
+                    score = len(accessible_nodes - set(new_snake)) / (len(G.keys() - set(new_snake)))
+                    # print(score)
                     if score > 0.8:
                         return new_path[:0:-1]
                     else:
                         resort.append((score, new_path[:0:-1]))
 
     # resort.sort(reverse=True)
-    # print(resort)
-    # return resort[0]
+    # if resort:
+    #     return resort[0]
+    # else:
     return []
+
 
 
 def DFS_long_path(G, snake, apple):
@@ -75,11 +78,16 @@ def DFS_long_path(G, snake, apple):
             target = body
             dist_from_tail = i
             break
-
+    
     while Q:
         path = Q.pop()
         v = path[-1]
         E.add(v)
+
+        if len(path) <= len(snake):
+            if snake[-len(path)] in E:
+                E.remove(snake[-len(path)])
+
         adj_nodes = G[v]
         adj_nodes.sort(key = lambda x: absolute_distance(x, target))
         for node in adj_nodes:
@@ -89,16 +97,19 @@ def DFS_long_path(G, snake, apple):
                 Q.append(new_path)
                 # Find out if at any point the snake could reach the target point
                 # as the tail leaves that point
-                # if travel_distance(node, target) == dist_from_tail - depth[node]:
-                new_snake = new_path[::-1] + [snake[i+1] for i in range(len(snake)-len(new_path))]
-                escape_path = BFS(G, new_snake, apple)
-                if escape_path:
-                    return escape_path + new_path[:0:-1]
+                if travel_distance(node, target) >= dist_from_tail - len(new_path):
+                    new_snake = new_path[::-1] + [snake[i+1] for i in range(len(snake)-len(new_path))]
+                    # print('!!!')
+                    # print(new_snake)
+                    # print(BFS(G, new_snake, apple))
+                    # print(new_path[:0:-1])
+                    escape_path = BFS(G, new_snake, apple)
+                    if escape_path:
+                        return escape_path + new_path[:0:-1]
                 longest_path = max(longest_path, new_path, key=len)
 
-    print('!!', longest_path[:0:-1])
-
-    return longest_path[:0:-1]
+    new_snake = longest_path[::-1] + [snake[i+1] for i in range(len(snake)-len(longest_path))]
+    return longest_path[:0:-1] + BFS(G, new_snake, apple)
 
 
 def absolute_distance(a, b):
