@@ -52,7 +52,9 @@ def BFS_path(G, snake, apple):
     
     return 0, []
 
-
+# Provides the snake with a longer path until it can find a safe shortest path
+# If there is no safe one, return the safest option
+# If there is no way to survivie, return the longest path
 def DFS_long_path(G, snake, apple):
     snake_head = snake[0]
 
@@ -86,10 +88,6 @@ def DFS_long_path(G, snake, apple):
                 # Find out if at any point the snake could reach the target point
                 # as the tail leaves that point
                 if travel_distance(node, target) >= dist_from_tail - len(new_path):
-                    # print('!!!')
-                    # print(new_snake)
-                    # print(BFS(G, new_snake, apple))
-                    # print(new_path[:0:-1])
                     score, escape_path = BFS_path(G, new_snake, apple)
                     if score >= 0.8:
                         return escape_path + new_path[:0:-1]
@@ -127,20 +125,3 @@ def create_adjacent_grid(x, y):
 
     return grid
 
-x = 40  # Width of the grid
-y = 20  # Height of the grid
-grid = create_adjacent_grid(x, y)
-
-
-#print(grid)
-# print(BFS(grid, [(1, 2), (1, 3), (1, 4)], (5, 2)))
-# snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5), (4, 4), (4, 3), (4, 2), (4, 1), (4, 0), (3, 0), (2, 0), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)])
-snake = deque([(2, 2), (2, 3), (2, 4), (1, 4), (1, 5), (2, 5), (3, 5), (4, 5), (4, 4), (4, 3), (4, 2), (4, 1), (4, 0), (3, 0), (2, 0), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 9), (1, 9)])
-# snake = [(4, 13), (4, 12), (4, 11), (4, 10), (4, 9), (3, 9), (2, 9), (2, 10), (2, 11), (2, 12), (2, 13), (2, 14), (2, 15), (2, 16), (2, 17), (2, 18), (1, 18), (1, 17), (1, 16), (1, 15), (1, 14), (1, 13), (1, 12), (1, 11), (1, 10), (1, 9), (1, 8), (1, 7), (1, 6), (1, 5), (1, 4), (1, 3), (1, 2), (1, 1), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 9), (0, 10), (0, 11), (0, 12), (0, 13), (0, 14), (0, 15), (0, 16), (0, 17), (0, 18), (0, 19), (1, 19), (2, 19), (3, 19), (4, 19), (5, 19), (6, 19), (7, 19), (8, 19), (9, 19), (10, 19), (11, 19), (12, 19), (13, 19), (14, 19), (15, 19), (16, 19), (17, 19), (18, 19), (19, 19), (20, 19), (21, 19), (22, 19), (23, 19), (24, 19), (25, 19), (26, 19), (27, 19), (28, 19), (29, 19), (30, 19)]
-# snake = deque(snake[::-1])
-
-# print(BFS_basic(grid, snake))
-print(BFS_path(grid, snake, (9, 9)))
-print(DFS_long_path(grid, snake, (9, 9)))
-
-# [(1, 3), (1, 2), (1, 1), (2, 1), (3, 1), (3, 2)]
